@@ -1,0 +1,8 @@
+.idea/
+target/
+out/
+logs/
+ExtentReports/
+*.iml
+application-dev.properties
+*.log
