@@ -1,14 +1,13 @@
 package com.overone.controller;
 
 import com.overone.model.Message;
+import com.overone.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import com.overone.service.ChatService;
-
-import java.util.List;
 
 @Controller
 public class MainController {
@@ -21,58 +20,26 @@ public class MainController {
         return new ModelAndView("hello", "command", new Message());
     }
 
-//    @PostMapping("/chat")
-//    public ModelAndView chat(@ModelAttribute("dispatcher") Message message,
-//                             ModelAndView model){
-//
-//        List<Message> allMessage = chatService.getAllMessage();
-//
-//        model.setViewName("chat");
-//        model.addObject("allMessage",allMessage);
-//        model.addObject("sender", message.getSender());
-//        return model;
-//    }
-@PostMapping("/chat")
-public String chat(@ModelAttribute("dispatcher") Message message,
-                         ModelMap model){
-
-    List<Message> allMessage = chatService.getAllMessage();
-
-    model.addAttribute("allMessage", allMessage);
-    model.addAttribute("sender", message.getSender());
-
-    return "chat";
-}
-    @PostMapping("/addMessage")
-    public String addMessage(@ModelAttribute("dispatcher") Message message,
-                       ModelMap model){
-
-     //   List<Message> allMessage = chatService.getAllMessage();
-
-      //  model.addAttribute("allMessage", allMessage);
-        model.addAttribute("sender", message.getSender());
-
-        return "chat";
+    @PostMapping("/chat")
+    public ModelAndView chat(@RequestParam("sender") String sender) {
+        ModelAndView chatModel = new ModelAndView("chat");
+        chatModel.addObject("sender", sender);
+        chatModel.addObject("allMessage", chatService.getAllMessage());
+        return chatModel;
     }
 
-
-
-//    public String addStudent(@ModelAttribute("mvc-dispatcher") Developer developer,
-//                             ModelMap model) {
-//        model.addAttribute("id", developer.getId());
-//        model.addAttribute("name", developer.getName());
-//        model.addAttribute("specilaty", developer.getSpecialty());
-//        model.addAttribute("experience", developer.getExperience());
-//
-//        return "result";
-//    }
-
-//    @GetMapping("/check")
-//    public ModelAndView checking(ModelAndView model) {
-//        String name = "FUUUUUUUUUU";
-//        model.setViewName("check");
-//        model.addObject("name", name);
-//        return model;
-//
-//    }
+    @PostMapping("/addMessage")
+    public ModelAndView addMessage(@RequestParam("sender") String sender, @RequestParam(value = "text", required = false) String text) {
+        boolean successInsert = chatService.addMessage(sender, text);
+        ModelAndView model;
+        if(successInsert) {
+            model = new ModelAndView("chat");
+            model.addObject("sender", sender);
+            model.addObject("allMessage", chatService.getAllMessage());
+            return model;
+        }
+        model = new ModelAndView("errorPage");
+        model.addObject("errorMessage", "Error adding message");
+        return model;
+    }
 }

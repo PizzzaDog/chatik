@@ -4,10 +4,7 @@ import com.overone.model.Message;
 import org.springframework.stereotype.Repository;
 import com.overone.utils.DBUtils;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,5 +31,18 @@ public class MessageRepository {
         }
 
         return messages;
+    }
+
+    public boolean save(Message message) {
+        try {
+            PreparedStatement preparedStatement = DBUtils.getDBConn().prepareStatement("Insert into message (time, sender, text) values (?, ?, ?)");
+            preparedStatement.setString(1, message.getTime());
+            preparedStatement.setString(2, message.getSender());
+            preparedStatement.setString(3, message.getText());
+            return preparedStatement.executeUpdate() == 1;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
     }
 }

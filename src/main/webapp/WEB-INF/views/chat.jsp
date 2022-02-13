@@ -6,34 +6,30 @@
 
 <table>
     <tr>
-        <th>id</th>
         <th>sender</th>
         <th>text</th>
-        <th>time</th>
     </tr>
       <c:forEach items="${allMessage}" var="chatList">
             <tr>
-                <td>${chatList.id}</td>
+                <td>${chatList.time}</td>
                 <td>${chatList.getSender()}</td>
                 <td>${chatList.text}</td>
-                <td>${chatList.time}</td>
             </tr>
         </c:forEach>
 </table>
 
 <h4>Add new message</h4>
-<form:form method="post" action="chat">
-  <table>
-    <tr>
-      <td><form:label path="sender">Sender</form:label></td>
-      <td><form:input path="sender" /></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <input type="submit" value="Submit"/>
-      </td>
-    </tr>
-  </table>
-</form:form>
+ <form action="addMessage" method="post">
+        <label>
+            <input type="hidden" name="sender" value="${sender}">
+            <input type="text" name="text"/>
+            <button type="submit">Send</button>
+        </label>
+    </form>
+     <form action="hello" method="get">
+            <label>
+                <button type="submit">Exit</button>
+            </label>
+        </form>
 </body>
 </html>
