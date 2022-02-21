@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
-    private Integer id;
-    private String time;
-    private String sender;
-    private String text;
+public class User {
+    private String username;
+    private String password;
 }

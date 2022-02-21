@@ -25,19 +25,7 @@ public class MessageRepository {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(DatabaseDealer.DB_URL, DatabaseDealer.USERNAME, DatabaseDealer.PASSWORD);
             stmt = con.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM " +
-                    "(SELECT * FROM chatik.message " +
-                    "ORDER BY id desc " +
-                    "LIMIT 12) o " +
-                    "ORDER BY id asc ");
-            while (rs.next()) {
-                Message message = new Message();
-                message.setId(rs.getInt("id"));
-                message.setTime(rs.getString("time"));
-                message.setSender(rs.getString("sender"));
-                message.setText(rs.getString("text"));
-                result.add(message);
-            }
+            result = processResultSet(rs);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -56,5 +44,27 @@ public class MessageRepository {
             throwables.printStackTrace();
         }
 
+    }
+
+    private List<Message> processResultSet(ResultSet rs) {
+        List<Message> result = new ArrayList<>();
+        try {
+            rs = stmt.executeQuery("SELECT * FROM " +
+                    "(SELECT * FROM chatik.message " +
+                    "ORDER BY id desc " +
+                    "LIMIT 12) o " +
+                    "ORDER BY id asc ");
+            while (rs.next()) {
+                Message message = new Message();
+                message.setId(rs.getInt("id"));
+                message.setTime(rs.getString("time"));
+                message.setSender(rs.getString("sender"));
+                message.setText(rs.getString("text"));
+                result.add(message);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return result;
     }
 }
