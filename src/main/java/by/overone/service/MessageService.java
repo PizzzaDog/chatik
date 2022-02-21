@@ -1,4 +1,4 @@
-package by.overone;
+package by.overone.service;
 
 import by.overone.entity.Message;
 import by.overone.repository.MessageRepository;
