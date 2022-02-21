@@ -21,6 +21,7 @@ public class MessageService {
         String time = LocalDateTime.now().toString();
         message.setTime(time.substring(11, 19));
         messageRepository.save(message);
+        System.out.println("feature2");
         return true;
     }
 }
